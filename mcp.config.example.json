@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "audible": {
+      "command": "npm",
+      "args": ["run", "mcp:start"],
+      "cwd": "/path/to/audible-mcp",
+      "env": {
+        "AUDIBLE_AUTH_FILE": "/path/to/audible-mcp/audible-auth.json"
+      }
+    }
+  }
+}
