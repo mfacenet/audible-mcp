@@ -137,12 +137,14 @@ The committed template lives in `mcp.config.example.json`.
 - `npm run typecheck`
 - `npm run test`
 - `npm run build`
+- `npm run check`
 
 ## Notes
 
 - Signed auth is the working API path in this repo.
 - `audible-auth.json` contains private credentials and should be treated as a secret.
 - The main CLI supports `serve`, `auth login`, and `auth refresh`.
+- CI runs `npm run check` on pushes to `master` and on pull requests.
 
 ## Security
 

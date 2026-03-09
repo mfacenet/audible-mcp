@@ -21,10 +21,12 @@
   "scripts": {
     "auth:login": "tsx src/server.ts auth login",
     "auth:refresh": "tsx src/server.ts auth refresh",
+    "check": "npm run typecheck && npm run test && npm run build",
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
     "build": "npm run clean && tsc --project tsconfig.build.json",
     "mcp:start": "tsx src/server.ts serve",
     "prepack": "npm run build",
+    "prepublishOnly": "npm run check",
     "smoke:test": "tsx scripts/smoke-test.ts",
     "test": "vitest run",
     "typecheck": "tsc --project tsconfig.json --noEmit"
