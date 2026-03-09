@@ -1,5 +1,8 @@
 # audible-mcp
 
+[![CI](https://github.com/tannerwj/audible-mcp/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/tannerwj/audible-mcp/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/audible-mcp)](https://www.npmjs.com/package/audible-mcp)
+
 `audible-mcp` is a TypeScript Model Context Protocol server for authenticated Audible read workflows.
 
 It currently exposes signed-auth tools and resources for:

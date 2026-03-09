@@ -1,6 +1,6 @@
 {
   "name": "audible-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Model Context Protocol server for Audible library, wishlist, collections, metadata, and listening stats.",
   "type": "module",
   "main": "./dist/src/index.js",
