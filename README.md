@@ -25,30 +25,34 @@ It currently exposes signed-auth tools and resources for:
 
 ## Setup
 
-Install dependencies:
+You need an `audible-auth.json` file before running the MCP server.
+
+If you are working from a local checkout:
 
 ```powershell
 npm install
-```
-
-Create a local Audible auth bundle:
-
-```powershell
 npm run auth:login -- --marketplace us --file .\audible-auth.json
 ```
 
-The login flow opens Audible/Amazon in your browser, then asks you to paste the final `maplanding` URL back into the terminal. The resulting `audible-auth.json` contains live credentials and is gitignored.
+If you are using the published package:
 
-Refresh the auth bundle later without re-registering the device:
+```sh
+npx audible-mcp auth login --marketplace us --file ./audible-auth.json
+```
+
+The login flow opens Audible/Amazon in your browser, then asks you to paste the final `maplanding` URL back into the terminal. The resulting `audible-auth.json` contains live credentials and should not be committed.
+
+If the saved auth expires, refresh the auth bundle without re-registering the device.
+
+Local checkout:
 
 ```powershell
 npm run auth:refresh -- --file .\audible-auth.json
 ```
 
-The published package uses the same CLI shape through `npx`:
+Published package:
 
 ```sh
-npx audible-mcp auth login --marketplace us --file ./audible-auth.json
 npx audible-mcp auth refresh --file ./audible-auth.json
 ```
 
