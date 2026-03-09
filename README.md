@@ -52,6 +52,14 @@ npx audible-mcp auth login --marketplace us --file ./audible-auth.json
 npx audible-mcp auth refresh --file ./audible-auth.json
 ```
 
+## Install Via npm
+
+Run the published server directly with `npx`:
+
+```sh
+npx -y audible-mcp serve
+```
+
 ## Run The MCP Server
 
 Start the stdio server directly:
@@ -83,7 +91,23 @@ The local config uses the server command from this repo and points `AUDIBLE_AUTH
 
 ## Example MCP Config
 
-The example config uses the common `mcpServers` shape:
+Using the published npm package:
+
+```json
+{
+  "mcpServers": {
+    "audible": {
+      "command": "npx",
+      "args": ["-y", "audible-mcp", "serve"],
+      "env": {
+        "AUDIBLE_AUTH_FILE": "/path/to/audible-auth.json"
+      }
+    }
+  }
+}
+```
+
+Using a local checkout:
 
 ```json
 {
@@ -100,7 +124,7 @@ The example config uses the common `mcpServers` shape:
 }
 ```
 
-The committed template lives in `mcp.config.example.json`.
+The committed template in `mcp.config.example.json` uses the published package.
 
 ## Available Tools
 
