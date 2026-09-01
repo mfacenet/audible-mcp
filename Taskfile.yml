@@ -1,0 +1,38 @@
+version: "3"
+
+tasks:
+  default:
+    cmds:
+      - task: test
+
+  fmt:
+    desc: Format Go sources
+    cmds:
+      - gofmt -w .
+
+  vet:
+    desc: Run go vet
+    cmds:
+      - go vet ./...
+
+  test:
+    desc: Run unit tests
+    cmds:
+      - go test ./...
+
+  test:race:
+    desc: Run tests with the race detector
+    cmds:
+      - go test -race -count=1 ./...
+
+  build:
+    desc: Build the audible-mcp binary
+    cmds:
+      - go build -o bin/audible-mcp ./cmd/audible-mcp
+
+  ci:
+    desc: Checks used by local CI parity
+    cmds:
+      - task: vet
+      - task: test:race
+      - task: build

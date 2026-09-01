@@ -1,0 +1,28 @@
+audible-mcp
+===========
+
+This repository is a Go reimplementation of the audible-mcp MCP server
+originally published at https://github.com/tannerwj/audible-mcp
+under the MIT License, Copyright (c) 2026 tannerwj.
+
+The original TypeScript tree is not shipped here. Tool names, CLI
+commands, the audible-auth.json schema, and the read-only Audible API
+surface were preserved so existing auth bundles and MCP client configs
+keep working.
+
+Authentication
+--------------
+
+Device login and request signing implement Amazon's Audible iOS app
+protocol (OpenID Authorization Code + PKCE, then RSA-SHA256 ADP
+signatures). Device type A2CZJZGLK2JJVM and related iOS app identifiers
+are Amazon's public protocol constants, not original creative work.
+
+This package is not a port of mkb79/Audible or mkb79/audible-cli, which
+are licensed AGPL-3.0. Those projects documented the unofficial Audible
+API; mkb79/audible-rs is a separate MIT-licensed reimplementation by the
+same author and was used only as protocol prior art.
+
+This project is not affiliated with, endorsed by, or connected to
+Audible or Amazon. Use it only against your own account, in accordance
+with Audible's terms of service and the laws that apply to you.

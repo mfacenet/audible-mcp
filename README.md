@@ -1,111 +1,45 @@
 # audible-mcp
 
-[![CI](https://github.com/tannerwj/audible-mcp/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/tannerwj/audible-mcp/actions/workflows/ci.yml)
-[![npm version](https://img.shields.io/npm/v/audible-mcp)](https://www.npmjs.com/package/audible-mcp)
+[![CI](https://github.com/mfacenet/audible-mcp/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mfacenet/audible-mcp/actions/workflows/ci.yml)
 
-`audible-mcp` is a TypeScript Model Context Protocol server for authenticated Audible read workflows.
+Go Model Context Protocol server for authenticated Audible **read** workflows: library, wishlist, collections, catalog metadata, and listening stats.
 
-It currently exposes signed-auth tools and resources for:
-
-- library listing
-- collection item listing
-- library search
-- in-progress title listing
-- single library item lookup
-- wishlist listing
-- collections listing
-- chapter lookup by ASIN
-- content metadata by ASIN
-- catalog product metadata by ASIN
-- aggregate listening stats
-- auth validation
-- local auth status
+This is a personal fork and Go rewrite of [tannerwj/audible-mcp](https://github.com/tannerwj/audible-mcp). It is **not affiliated with Audible or Amazon**.
 
 ## Requirements
 
-- Node.js 22+
-- an Audible auth bundle created with the login flow in this repo or via the published CLI
+- Go 1.27+
+- an `audible-auth.json` bundle from `audible-mcp auth login` (or a bundle created by the original TypeScript CLI)
 
 ## Setup
 
-You need an `audible-auth.json` file before running the MCP server.
-
-If you are working from a local checkout:
-
-```powershell
-npm install
-npm run auth:login -- --marketplace us --file .\audible-auth.json
+```sh
+go build -o bin/audible-mcp ./cmd/audible-mcp
+./bin/audible-mcp auth login --marketplace us --file ./audible-auth.json
 ```
 
-If you are using the published package:
+The login flow opens Amazon/Audible in your browser. Paste the final `maplanding` URL back into the terminal. The resulting `audible-auth.json` contains live credentials and must not be committed.
+
+Refresh without re-registering the device:
 
 ```sh
-npx audible-mcp auth login --marketplace us --file ./audible-auth.json
+./bin/audible-mcp auth refresh --file ./audible-auth.json
 ```
 
-The login flow opens Audible/Amazon in your browser, then asks you to paste the final `maplanding` URL back into the terminal. The resulting `audible-auth.json` contains live credentials and should not be committed.
-
-If the saved auth expires, refresh the auth bundle without re-registering the device.
-
-Local checkout:
-
-```powershell
-npm run auth:refresh -- --file .\audible-auth.json
-```
-
-Published package:
+## Run the MCP server
 
 ```sh
-npx audible-mcp auth refresh --file ./audible-auth.json
+AUDIBLE_AUTH_FILE=./audible-auth.json ./bin/audible-mcp serve
 ```
 
-## Install Via npm
-
-Run the published server directly with `npx`:
-
-```sh
-npx -y audible-mcp serve
-```
-
-## Run The MCP Server
-
-Start the stdio server directly:
-
-```powershell
-$env:AUDIBLE_AUTH_FILE = ".\audible-auth.json"
-npm run mcp:start
-```
-
-After npm publish, the equivalent command is:
-
-```sh
-AUDIBLE_AUTH_FILE=./audible-auth.json npx audible-mcp serve
-```
-
-Run the end-to-end MCP smoke test:
-
-```powershell
-$env:AUDIBLE_AUTH_FILE = ".\audible-auth.json"
-npm run smoke:test
-```
-
-## Root Config Files
-
-- `mcp.config.json`: local MCP client config for this checkout; gitignored
-- `mcp.config.example.json`: committed template you can copy and edit for your machine
-
-The local config uses the server command from this repo and points `AUDIBLE_AUTH_FILE` at the root auth bundle.
-
-## Example MCP Config
-
-Using the published npm package:
+## Example MCP config
 
 ```json
 {
   "mcpServers": {
     "audible": {
-      "command": "npx",
-      "args": ["-y", "audible-mcp", "serve"],
+      "command": "/path/to/audible-mcp",
+      "args": ["serve"],
       "env": {
         "AUDIBLE_AUTH_FILE": "/path/to/audible-auth.json"
       }
@@ -114,26 +48,9 @@ Using the published npm package:
 }
 ```
 
-Using a local checkout:
+`mcp.config.example.json` is the committed template. Copy it to `mcp.config.json` (gitignored) for local use.
 
-```json
-{
-  "mcpServers": {
-    "audible": {
-      "command": "npm",
-      "args": ["run", "mcp:start"],
-      "cwd": "/path/to/audible-mcp",
-      "env": {
-        "AUDIBLE_AUTH_FILE": "/path/to/audible-mcp/audible-auth.json"
-      }
-    }
-  }
-}
-```
-
-The committed template in `mcp.config.example.json` uses the published package.
-
-## Available Tools
+## Tools
 
 - `audible_list_library`
 - `audible_list_collection_items`
@@ -149,7 +66,7 @@ The committed template in `mcp.config.example.json` uses the published package.
 - `audible_validate_auth`
 - `audible_get_auth_status`
 
-## Available Resources
+## Resources
 
 - `audible://auth/status`
 - `audible://wishlist`
@@ -159,26 +76,18 @@ The committed template in `mcp.config.example.json` uses the published package.
 - `audible://content/{asin}/metadata`
 - `audible://catalog/{asin}`
 
-## Development Scripts
+## Development
 
-- `npm run auth:login`
-- `npm run auth:refresh`
-- `npm run mcp:start`
-- `npm run smoke:test`
-- `npm run typecheck`
-- `npm run test`
-- `npm run build`
-- `npm run check`
+```sh
+task test
+task test:race
+task build
+```
 
-## Notes
+Or without Task: `go test ./...` and `go build -o bin/audible-mcp ./cmd/audible-mcp`.
 
-- Signed auth is the working API path in this repo.
-- `audible-auth.json` contains private credentials and should be treated as a secret.
-- The main CLI supports `serve`, `auth login`, and `auth refresh`.
-- CI runs `npm run check` on pushes to `master` and on pull requests.
+## License
 
-## Security
+MIT. See [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
-- Do not commit `audible-auth.json`.
-- If the auth bundle is ever exposed, revoke or replace it by generating a new device registration.
-- `mcp.config.json` is local-only and should stay uncommitted.
+Auth talks to Amazon's unofficial Audible iOS API for **your own account**. Keep the server read-only. Do not commit `audible-auth.json`.

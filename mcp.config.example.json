@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "audible": {
-      "command": "npx",
-      "args": ["-y", "audible-mcp", "serve"],
+      "command": "/path/to/audible-mcp",
+      "args": ["serve"],
       "env": {
         "AUDIBLE_AUTH_FILE": "/path/to/audible-auth.json"
       }

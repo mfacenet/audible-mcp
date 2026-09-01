@@ -1,8 +1,10 @@
-node_modules
-dist
+bin/
+dist/
 coverage
+coverage.out
 .env
 .env.local
 *.log
 audible-auth.json
 mcp.config.json
+node_modules
