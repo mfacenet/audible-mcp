@@ -27,8 +27,15 @@ tasks:
 
   build:
     desc: Build the audible-mcp binary
+    vars:
+      VERSION: '{{.VERSION | default "dev"}}'
     cmds:
-      - go build -o bin/audible-mcp ./cmd/audible-mcp
+      - go build -trimpath -ldflags="-s -w -X github.com/mfacenet/audible-mcp/internal/version.Version={{.VERSION}}" -o bin/audible-mcp ./cmd/audible-mcp
+
+  release:snapshot:
+    desc: Cross-compile snapshot binaries with GoReleaser (does not publish)
+    cmds:
+      - goreleaser build --snapshot --clean
 
   ci:
     desc: Checks used by local CI parity

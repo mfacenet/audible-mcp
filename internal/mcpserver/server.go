@@ -9,9 +9,8 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/mfacenet/audible-mcp/internal/audible"
+	"github.com/mfacenet/audible-mcp/internal/version"
 )
-
-const version = "2.0.0"
 
 // Options configure the Audible MCP server.
 type Options struct {
@@ -31,7 +30,7 @@ func New(opts Options) (*mcp.Server, error) {
 
 	server := mcp.NewServer(&mcp.Implementation{
 		Name:    "audible-mcp",
-		Version: version,
+		Version: version.Version,
 	}, &mcp.ServerOptions{
 		Instructions: "Use the Audible tools to inspect the user's library, wishlist, collections, catalog metadata, and listening stats. Prefer read-only workflows.",
 	})

@@ -6,43 +6,85 @@ Go Model Context Protocol server for authenticated Audible **read** workflows: l
 
 This is a personal fork and Go rewrite of [tannerwj/audible-mcp](https://github.com/tannerwj/audible-mcp). It is **not affiliated with Audible or Amazon**.
 
-## Requirements
+## Install
 
-- Go 1.27+
-- an `audible-auth.json` bundle from `audible-mcp auth login` (or a bundle created by the original TypeScript CLI)
+### Go
+
+```sh
+go install github.com/mfacenet/audible-mcp/cmd/audible-mcp@latest
+```
+
+Pin a release with `@v2.0.0` once that tag exists. The binary lands on `$GOBIN` (usually `$HOME/go/bin`).
+
+### GitHub Releases
+
+Download the archive for your OS/arch from [Releases](https://github.com/mfacenet/audible-mcp/releases), unpack `audible-mcp`, and put it on your `PATH`.
+
+### Docker
+
+Images are `ghcr.io/mfacenet/audible-mcp`. Bind-mount the auth file; do not bake credentials into the image.
+
+```sh
+docker pull ghcr.io/mfacenet/audible-mcp:latest
+```
 
 ## Setup
 
+You need an `audible-auth.json` bundle before serving. Existing bundles from the original TypeScript CLI still work.
+
 ```sh
-go build -o bin/audible-mcp ./cmd/audible-mcp
-./bin/audible-mcp auth login --marketplace us --file ./audible-auth.json
+audible-mcp auth login --marketplace us --file ./audible-auth.json
 ```
 
-The login flow opens Amazon/Audible in your browser. Paste the final `maplanding` URL back into the terminal. The resulting `audible-auth.json` contains live credentials and must not be committed.
+The login flow opens Amazon/Audible in your browser. Paste the final `maplanding` URL back into the terminal. The resulting file contains live credentials and must not be committed.
 
 Refresh without re-registering the device:
 
 ```sh
-./bin/audible-mcp auth refresh --file ./audible-auth.json
+audible-mcp auth refresh --file ./audible-auth.json
 ```
 
 ## Run the MCP server
 
 ```sh
-AUDIBLE_AUTH_FILE=./audible-auth.json ./bin/audible-mcp serve
+AUDIBLE_AUTH_FILE=./audible-auth.json audible-mcp serve
 ```
 
 ## Example MCP config
+
+Binary on `PATH`:
 
 ```json
 {
   "mcpServers": {
     "audible": {
-      "command": "/path/to/audible-mcp",
+      "command": "audible-mcp",
       "args": ["serve"],
       "env": {
         "AUDIBLE_AUTH_FILE": "/path/to/audible-auth.json"
       }
+    }
+  }
+}
+```
+
+Docker (stdio). The auth file is mounted read-only:
+
+```json
+{
+  "mcpServers": {
+    "audible": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-v",
+        "/path/to/audible-auth.json:/auth/audible-auth.json:ro",
+        "-e",
+        "AUDIBLE_AUTH_FILE=/auth/audible-auth.json",
+        "ghcr.io/mfacenet/audible-mcp"
+      ]
     }
   }
 }
@@ -82,9 +124,12 @@ AUDIBLE_AUTH_FILE=./audible-auth.json ./bin/audible-mcp serve
 task test
 task test:race
 task build
+task release:snapshot
 ```
 
 Or without Task: `go test ./...` and `go build -o bin/audible-mcp ./cmd/audible-mcp`.
+
+Release process: [docs/release.md](docs/release.md).
 
 ## License
 

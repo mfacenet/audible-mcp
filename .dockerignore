@@ -1,0 +1,12 @@
+.git
+.github
+bin
+dist
+docs
+**/*_test.go
+*.md
+.env
+.env.*
+*.log
+audible-auth.json
+mcp.config.json

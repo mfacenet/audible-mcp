@@ -14,6 +14,13 @@ func TestHelp(t *testing.T) {
 	}
 }
 
+func TestVersion(t *testing.T) {
+	t.Parallel()
+	if err := Run(context.Background(), []string{"version"}); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestUnknownCommand(t *testing.T) {
 	t.Parallel()
 	err := Run(context.Background(), []string{"frobnicate"})

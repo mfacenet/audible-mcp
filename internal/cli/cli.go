@@ -17,6 +17,7 @@ import (
 	"github.com/mfacenet/audible-mcp/internal/auth"
 	"github.com/mfacenet/audible-mcp/internal/marketplace"
 	"github.com/mfacenet/audible-mcp/internal/mcpserver"
+	"github.com/mfacenet/audible-mcp/internal/version"
 )
 
 // Run is the CLI entrypoint.
@@ -44,6 +45,9 @@ func Run(ctx context.Context, args []string) error {
 		}
 	case "help", "--help", "-h":
 		printUsage(os.Stdout)
+		return nil
+	case "version", "--version", "-v":
+		fmt.Printf("audible-mcp %s\n", version.Version)
 		return nil
 	default:
 		return usageError("unknown command: " + strings.Join(args, " "))
@@ -211,6 +215,7 @@ func printUsage(w io.Writer) {
 	fmt.Fprintln(w, "  audible-mcp serve [--auth-file <path>] [--base-url <url>]")
 	fmt.Fprintln(w, "  audible-mcp auth login [--marketplace <code>] [--file <path>] [--no-open] [--serial <serial>] [--with-username]")
 	fmt.Fprintln(w, "  audible-mcp auth refresh [--file <path>] [--refresh-cookies]")
+	fmt.Fprintln(w, "  audible-mcp version")
 }
 
 type usageErr struct{ msg string }
